@@ -1,0 +1,43 @@
+name: "cd"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: login to Google Artifact Registry
+        uses: docker/login-action@v3
+        with:
+            registry: ${{ secrets.GCP_REGION }}-docker.pkg.dev
+            username: _json_key
+            password: ${{ secrets.SA_KEY }}
+      - name: tag Docker image and push to Google Artifact Registry
+        uses: docker/build-push-action@v6
+        with:
+          file: prod.Dockerfile
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.GAR_REPO }}/webapp:${{ github.sha }}
+      - name: authenticate with Google Cloud
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.SA_KEY }}"
+      - name: deploy to Cloud Run
+        id: deploy
+        uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          image: "${{ secrets.GAR_REPO }}/webapp:${{ github.sha }}"
+          flags: "--port=80 --allow-unauthenticated"
+          region: "${{ secrets.GCP_REGION }}"
+          service: webapp
+      - name: show deploy output
+        run: 'curl "${{ steps.deploy.outputs.url }}"'
+    

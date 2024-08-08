@@ -1,0 +1,21 @@
+{
+    "authors": [
+        {
+            "name": "yactouat"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "name": "yactouat/php-web-api",
+    "version": "1.0.0",
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    }
+}

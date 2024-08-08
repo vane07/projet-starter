@@ -1,0 +1,16 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "GitHub.vscode-github-actions",
+        "xdebug.php-debug"
+      ]
+    }
+  },
+    "dockerComposeFile": "../docker-compose.yml",
+    "name": "test and deploy a PHP web API",
+    "service": "webapp",
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/var/www/html"
+  }

@@ -1,0 +1,20 @@
+name: "ci"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: run compose stack
+        run: docker compose up -d
+      - name: run tests
+        run: |
+          sudo chmod -R 777 vendor
+          docker compose exec -it webapp bash -c "cd /var/www/html && composer install && ./vendor/bin/phpunit --testdox --colors tests"
